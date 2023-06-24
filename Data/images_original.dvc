@@ -1,0 +1,5 @@
+outs:
+- md5: d51e5962bbadebae18e35019feee08b7.dir
+  size: 70836023
+  nfiles: 999
+  path: images_original

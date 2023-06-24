@@ -1,0 +1,5 @@
+outs:
+- md5: 93c37d996f5645354ebb96a940624b50.dir
+  size: 1323989016
+  nfiles: 1000
+  path: genres_original
