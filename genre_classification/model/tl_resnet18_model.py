@@ -7,7 +7,11 @@ from genre_classification.trainer.optimizer import Optimizer
 
 class Resnet18Model(TLModelBase):
 
-    def __init__(self, model=models.resnet18(pretrained=True),
-                 criterion=Criterion.cross_entropy.value,
-                 optimizer=Optimizer.adam.value):
+    def __init__(self, model, criterion, optimizer):
         super().__init__(model=model, criterion=criterion, optimizer=optimizer)
+
+
+def train_resnet18_model(model=models.resnet18(pretrained=True),
+                         criterion=Criterion.cross_entropy.value,
+                         optimizer=Optimizer.adam.value) -> Resnet18Model:
+    return Resnet18Model(model, criterion, optimizer)

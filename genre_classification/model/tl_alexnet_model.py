@@ -7,7 +7,11 @@ from genre_classification.trainer.optimizer import Optimizer
 
 class AlexNetModel(TLModelBase):
 
-    def __init__(self, model=models.alexnet(pretrained=True),
-                 criterion=Criterion.cross_entropy.value,
-                 optimizer=Optimizer.adam.value):
+    def __init__(self, model, criterion, optimizer):
         super().__init__(model=model, criterion=criterion, optimizer=optimizer)
+
+
+def train_alex_net_model(model=models.alexnet(pretrained=True),
+                         criterion=Criterion.cross_entropy.value,
+                         optimizer=Optimizer.adam.value) -> AlexNetModel:
+    return AlexNetModel(model=model, criterion=criterion, optimizer=optimizer)

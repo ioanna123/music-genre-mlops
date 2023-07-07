@@ -7,7 +7,11 @@ from genre_classification.trainer.optimizer import Optimizer
 
 class VGGModel(TLModelBase):
 
-    def __init__(self, model=models.vgg16(pretrained=True),
-                 criterion=Criterion.cross_entropy.value,
-                 optimizer=Optimizer.adam.value):
+    def __init__(self, model, criterion, optimizer):
         super().__init__(model=model, criterion=criterion, optimizer=optimizer)
+
+
+def train_vgg_model(model=models.vgg16(pretrained=True),
+                    criterion=Criterion.cross_entropy.value,
+                    optimizer=Optimizer.adam.value) -> VGGModel:
+    return VGGModel(model, criterion, optimizer)

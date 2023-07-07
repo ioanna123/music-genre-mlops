@@ -55,7 +55,8 @@ class TLModelBase(ABC):
     def _save_model(checkpoint_path: str, model, correct_val, total_val):
         torch.save(model, os.path.join(checkpoint_path, f'checkpoint_{correct_val / total_val * 100:.2f}'))
 
-    def train(self, test_dataloader, train_dataloader, num_epoch: int = 10):
+    def train(self, test_dataloader, train_dataloader, num_epoch: int = 10, save: bool = True,
+              checkpoint_path: str = "checkpoint_path", ):
         steps = 0
         train_losses, val_losses = [], []
         device = self.device
@@ -115,6 +116,7 @@ class TLModelBase(ABC):
 
                     train_losses.append(running_loss / total_train)
                     val_losses.append(val_loss / total_val)
-            self._save_model(checkpoint_path='checkpoints', model=self.model, correct_val=correct_val,
-                             total_val=total_val)
+            if save:
+                self._save_model(checkpoint_path=checkpoint_path, model=self.model, correct_val=correct_val,
+                                 total_val=total_val)
         return self.model, train_losses, val_losses

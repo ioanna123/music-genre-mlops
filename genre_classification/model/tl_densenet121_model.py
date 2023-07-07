@@ -7,7 +7,11 @@ from genre_classification.trainer.optimizer import Optimizer
 
 class Densenet121Model(TLModelBase):
 
-    def __init__(self, model=models.densenet121(pretrained=True),
-                 criterion=Criterion.cross_entropy.value,
-                 optimizer=Optimizer.adam.value):
+    def __init__(self, model, criterion, optimizer):
         super().__init__(model=model, criterion=criterion, optimizer=optimizer)
+
+
+def train_densenet121_model(model=models.densenet121(pretrained=True),
+                            criterion=Criterion.cross_entropy.value,
+                            optimizer=Optimizer.adam.value) -> Densenet121Model:
+    return Densenet121Model(model, criterion, optimizer)
