@@ -40,26 +40,9 @@ class TLModelBase(ABC):
         for parameter in self.model.parameters():
             parameter.requires_grad = False
 
-        # Number of Input Features in the Last Fully Connected Layer
-        # in_features = self.model.classifier[-1].in_features
-        # in_features = self.model.classifier.in_features
-        # in_features = self.model.fc.in_features
-        print('AAAAAAAAAAAAAAAAAAAAAAAA')
-        print(in_features)
-
         # Replacing the Last Fully Connected Layer
         fc = nn.Linear(in_features=self.in_features, out_features=self.n_classes)
         self.model.fc = fc
-        #
-        # Updating the Weights and Bias of the last layer
-        # params_to_update = []
-        # for name, param in self.model.named_parameters():
-        #     if param.requires_grad == True:
-        #         params_to_update.append(param)
-
-        # Define the Loss and Optimizer Functions
-        # self.criterion = nn.CrossEntropyLoss()
-        # self.optimizer = torch.optim.Adam(params_to_update, lr=0.001)
 
     @staticmethod
     def _save_model(checkpoint_path: str, model, correct_val, total_val):
@@ -104,7 +87,8 @@ class TLModelBase(ABC):
                 running_loss += loss.item()
 
                 # Logging
-                if steps % 10 == 0:
+                if steps % 1 == 0:
+                    # if True:
                     print(f'Epoch [{epoch + 1}]/[{num_epoch}]. Batch [{i + 1}]/[{len(train_dataloader)}].',
                           end=' ')
                     print(f'Train loss {running_loss / steps:.3f}.', end=' ')
