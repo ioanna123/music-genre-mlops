@@ -2,11 +2,14 @@ import os
 from abc import ABC
 from time import time
 
+import numpy as np
 import torch
+from sklearn.metrics import precision_recall_fscore_support as score
 from torch import nn
 from tqdm import tqdm
 
 from genre_classification.data_model.criterion import Criterion
+from genre_classification.data_model.evaluation import EvaluationMetrics
 from genre_classification.trainer.optimizer import Optimizer, OptimizerBase
 from settings import LR
 
@@ -15,41 +18,31 @@ class TLModelBase(ABC):
 
     def __init__(self,
                  model,
+                 criterion: Criterion,
+                 optimizer: Optimizer,
+                 in_features: int,
                  n_classes: int = 10,
                  device='cuda' if torch.cuda.is_available() else 'cpu',
-                 criterion=Criterion,
-                 optimizer=Optimizer
+
                  ):
         self.model = model
         self.n_classes = n_classes
         self.device = device
         self.criterion = criterion
         self.optimizer_option = optimizer
+        self.in_features = in_features
+
+        self.genre_dict = {"blues": 0, "classical": 1, "country": 2, "disco": 3, "hiphop": 4, "jazz": 5, "metal": 6,
+                           "pop": 7,
+                           "reggae": 8, "rock": 9}
 
         # Fix the trainable parameters
         for parameter in self.model.parameters():
             parameter.requires_grad = False
 
-        # Number of Input Features in the Last Fully Connected Layer
-        in_features = self.model.fc.in_features
-
         # Replacing the Last Fully Connected Layer
-        fc = nn.Linear(in_features=in_features, out_features=self.n_classes)
+        fc = nn.Linear(in_features=self.in_features, out_features=self.n_classes)
         self.model.fc = fc
-        #
-        # Updating the Weights and Bias of the last layer
-        params_to_update = []
-        for name, param in self.model.named_parameters():
-            if param.requires_grad == True:
-                params_to_update.append(param)
-
-        # Define the Loss and Optimizer Functions
-        # self.criterion = nn.CrossEntropyLoss()
-        # self.optimizer = torch.optim.Adam(params_to_update, lr=0.001)
-
-        self.optimizer = OptimizerBase(params_to_update, LR).optimizer(self.optimizer_option)
-
-    # def train_setup
 
     @staticmethod
     def _save_model(checkpoint_path: str, model, correct_val, total_val):
@@ -62,6 +55,10 @@ class TLModelBase(ABC):
         device = self.device
 
         self.model.to(device)
+        for param in self.model.parameters():
+            param.requires_grad = True
+
+        optimizer = OptimizerBase(self.model.parameters(), LR).optimizer(self.optimizer_option)
         for epoch in tqdm(range(num_epoch)):
             running_loss = 0
             correct_train = 0
@@ -69,6 +66,7 @@ class TLModelBase(ABC):
             iter_time = time()
 
             self.model.train()
+
             for i, (images, labels) in enumerate(train_dataloader):
                 steps += 1
                 images = images.to(device)
@@ -82,14 +80,15 @@ class TLModelBase(ABC):
                 total_train += labels.size(0)
 
                 # Backward and optimize
-                self.optimizer.zero_grad()
+                optimizer.zero_grad()
                 loss.backward()
-                self.optimizer.step()
+                optimizer.step()
 
                 running_loss += loss.item()
 
                 # Logging
-                if steps % 10 == 0:
+                if steps % 1 == 0:
+                    # if True:
                     print(f'Epoch [{epoch + 1}]/[{num_epoch}]. Batch [{i + 1}]/[{len(train_dataloader)}].',
                           end=' ')
                     print(f'Train loss {running_loss / steps:.3f}.', end=' ')
@@ -120,3 +119,25 @@ class TLModelBase(ABC):
                 self._save_model(checkpoint_path=checkpoint_path, model=self.model, correct_val=correct_val,
                                  total_val=total_val)
         return self.model, train_losses, val_losses
+
+    def evaluate_model(self, test_subset, model, classes) -> EvaluationMetrics:
+        y_test = []
+        y_pred = []
+        for img, label in test_subset:
+            img = torch.Tensor(img)
+            img = img.to(self.device)
+            model.eval()
+            prediction = model(img[None])
+
+            final_pred = classes[torch.max(prediction, dim=1)[1]]
+
+            # print(label, genre_dict[final_pred])
+
+            y_test.append(label)
+            y_pred.append(self.genre_dict[final_pred])
+            precision, recall, fscore, support = score(np.array(y_test), np.array(y_pred))
+
+            return EvaluationMetrics(precision=precision,
+                                     recall=recall,
+                                     fscore=fscore,
+                                     support=support)

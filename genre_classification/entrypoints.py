@@ -1,4 +1,3 @@
-import os
 from os import listdir
 from os.path import isfile, join
 
@@ -31,7 +30,7 @@ def train_tl_model_images(tl_model: TLModel, criterion: Criterion, optimizer: Op
 
     image_data_loader = get_dataset().transform(images_path)
 
-    model, train_losses, val_losses = model.train(
+    trained_model, train_losses, val_losses = model.train(
         train_dataloader=image_data_loader.train_dataloader,
         test_dataloader=image_data_loader.val_dataloader,
         save=save,
@@ -39,27 +38,34 @@ def train_tl_model_images(tl_model: TLModel, criterion: Criterion, optimizer: Op
         checkpoint_path=checkpoints_path
     )
 
-    return model, train_losses, val_losses
+    classes = image_data_loader.train_dataloader.dataset.dataset.classes
+    precision, recall, fscore, support = model.evaluate_model(
+        test_subset=image_data_loader.test_subset, model=trained_model, classes=classes)
+
+    return precision, recall, fscore, support
 
 
-def create_image_features_from_audio(path_with_audios_genre_dir: str, path_to_image_genre: str,
+def create_image_features_from_audio(path_with_audios_dir: str, path_to_image: str,
                                      preprocessor: AudioPreprocess = None, feature_extractor: FeatureExtraction = None):
-    preprocessor if preprocessor is not None else get_audio_preprocessor()
-    feature_extractor if feature_extractor is not None else get_feature_extraction()
+    preprocessor = preprocessor if preprocessor is not None else get_audio_preprocessor()
+    feature_extractor = feature_extractor if feature_extractor is not None else get_feature_extraction()
+    audio_dirs_genre = [join(path_with_audios_dir, f) for f in listdir(path_with_audios_dir) if
+                        isfile(join(path_with_audios_dir, f)) or listdir(join(path_with_audios_dir, f))]
+    for audio_genre in audio_dirs_genre:
+        audio_files = [join(audio_genre, f) for f in listdir(audio_genre) if
+                       isfile(join(audio_genre, f))]
 
-    audio_files = [f for f in listdir(path_with_audios_genre_dir) if
-                   isfile(join(path_with_audios_genre_dir, f))]
-
-    for audio in audio_files:
-        meta = extract_audio_metadata(join(path_with_audios_genre_dir, audio))
-        for start in range(0, int(meta.duration), window_duration):
-            for streamed in preprocessor.stream(audio, start=start, window_duration=window_duration):
-                features = feature_extractor.transform(streamed)
-                save_mel_spec_per_genre(
-                    image_dir=path_to_image_genre,
-                    image_name=audio.split('.')[1],
-                    mel_spec=features
-                )
+        for audio in audio_files:
+            meta = extract_audio_metadata(audio)
+            for start in range(0, int(meta.duration), window_duration):
+                for streamed in preprocessor.stream(audio, start=start, window_duration=window_duration):
+                    features = feature_extractor.transform(streamed)
+                    save_mel_spec_per_genre(
+                        image_dir=path_to_image,
+                        image_name=audio.split('.')[1],
+                        mel_spec=features,
+                        genre=audio.split('.')[0].split('/')[-1]
+                    )
 
 
 def train_tl_model_audio(tl_model: TLModel, criterion: Criterion, optimizer: Optimizer,
@@ -79,22 +85,19 @@ def train_tl_model_audio(tl_model: TLModel, criterion: Criterion, optimizer: Opt
 
     # model selection
     model = model_selection(tl_model, criterion, optimizer)
-    audio_dirs_genre = [join(audio_paths, f) for f in listdir(audio_paths) if
-                        isfile(join(audio_paths, f)) or listdir(join(audio_paths, f))]
-    # create image features per music genre
-    for audio_dir_genre in audio_dirs_genre:
-        image_genre_path = join(save_images_path, audio_dir_genre.split('/')[-1])
-        os.makedirs(image_genre_path, exist_ok=True)
-        create_image_features_from_audio(audio_dir_genre, image_genre_path)
+
+    # create image features
+    create_image_features_from_audio(audio_paths, path_to_image=save_images_path)
 
     image_data_loader = get_dataset().transform(save_images_path)
 
-    model, train_losses, val_losses = model.train(
+    trained_model, train_losses, val_losses = model.train(
         train_dataloader=image_data_loader.train_dataloader,
         test_dataloader=image_data_loader.val_dataloader,
         save=save,
         num_epoch=num_epoch,
         checkpoint_path=checkpoints_path
     )
-
-    return model, train_losses, val_losses
+    classes = image_data_loader.train_dataloader.dataset.dataset.classes
+    return model.evaluate_model(
+        test_subset=image_data_loader.test_subset, model=trained_model, classes=classes)
