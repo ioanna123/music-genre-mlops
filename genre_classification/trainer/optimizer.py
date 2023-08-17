@@ -8,7 +8,7 @@ class Optimizer(Enum):
     Class representing the optimizer options.
     """
     adam = 'adam'
-    sgd = "sdg"
+    sdg = "sdg"
     rmsprop = "rmsprop"
 
 
@@ -22,7 +22,7 @@ class OptimizerBase:
         if optimizer == Optimizer.adam.value:
             return optim.Adam(self.params, lr=self.lr)
 
-        elif optimizer == Optimizer.sgd.value:
+        elif optimizer == Optimizer.sdg.value:
             return optim.SGD(params=self.params, lr=self.lr)
 
         elif optimizer == Optimizer.rmsprop.value:
