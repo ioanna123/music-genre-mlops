@@ -8,4 +8,3 @@ class EvaluationMetrics(BaseModel):
     precision: float
     recall: float
     fscore: float
-    support: float

@@ -10,6 +10,7 @@ from genre_classification.preprocessor.factories import get_dataset, get_audio_p
 from genre_classification.trainer.optimizer import Optimizer
 from genre_classification.utils.metadata import extract_audio_metadata
 from genre_classification.utils.model_selection import model_selection
+from genre_classification.utils.save_load import save_model
 from genre_classification.utils.save_mel_spec_img import save_mel_spec_per_genre
 from settings import window_duration
 
@@ -33,16 +34,14 @@ def train_tl_model_images(tl_model: TLModel, criterion: Criterion, optimizer: Op
     trained_model, train_losses, val_losses = model.train(
         train_dataloader=image_data_loader.train_dataloader,
         test_dataloader=image_data_loader.val_dataloader,
-        save=save,
-        num_epoch=num_epoch,
-        checkpoint_path=checkpoints_path
-    )
+        num_epoch=num_epoch)
+
+    if save:
+        save_model(checkpoint_path=checkpoints_path, model=trained_model, model_name=tl_model)
 
     classes = image_data_loader.train_dataloader.dataset.dataset.classes
-    precision, recall, fscore, support = model.evaluate_model(
+    return model.evaluate_model(
         test_subset=image_data_loader.test_subset, model=trained_model, classes=classes)
-
-    return precision, recall, fscore, support
 
 
 def create_image_features_from_audio(path_with_audios_dir: str, path_to_image: str,
@@ -94,10 +93,10 @@ def train_tl_model_audio(tl_model: TLModel, criterion: Criterion, optimizer: Opt
     trained_model, train_losses, val_losses = model.train(
         train_dataloader=image_data_loader.train_dataloader,
         test_dataloader=image_data_loader.val_dataloader,
-        save=save,
-        num_epoch=num_epoch,
-        checkpoint_path=checkpoints_path
-    )
+        num_epoch=num_epoch)
+    if save:
+        save_model(checkpoint_path=checkpoints_path, model=trained_model, model_name=tl_model)
+
     classes = image_data_loader.train_dataloader.dataset.dataset.classes
     return model.evaluate_model(
         test_subset=image_data_loader.test_subset, model=trained_model, classes=classes)

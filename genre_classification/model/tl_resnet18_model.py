@@ -8,7 +8,8 @@ from genre_classification.trainer.optimizer import Optimizer
 class Resnet18Model(TLModelBase):
 
     def __init__(self, model, criterion, optimizer, features):
-        super().__init__(model=model, criterion=criterion, optimizer=optimizer, in_features=features)
+        super().__init__(model_name='resnet18', model=model, criterion=criterion, optimizer=optimizer,
+                         in_features=features)
 
 
 def train_resnet18_model(criterion: Criterion,

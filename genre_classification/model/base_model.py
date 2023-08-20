@@ -1,4 +1,3 @@
-import os
 from abc import ABC
 from time import time
 
@@ -21,9 +20,9 @@ class TLModelBase(ABC):
                  criterion: Criterion,
                  optimizer: Optimizer,
                  in_features: int,
+                 model_name: str,
                  n_classes: int = 10,
-                 device='cuda' if torch.cuda.is_available() else 'cpu',
-
+                 device='cuda' if torch.cuda.is_available() else 'cpu'
                  ):
         self.model = model
         self.n_classes = n_classes
@@ -33,8 +32,7 @@ class TLModelBase(ABC):
         self.in_features = in_features
 
         self.genre_dict = {"blues": 0, "classical": 1, "country": 2, "disco": 3, "hiphop": 4, "jazz": 5, "metal": 6,
-                           "pop": 7,
-                           "reggae": 8, "rock": 9}
+                           "pop": 7, "reggae": 8, "rock": 9}
 
         # Fix the trainable parameters
         for parameter in self.model.parameters():
@@ -44,12 +42,7 @@ class TLModelBase(ABC):
         fc = nn.Linear(in_features=self.in_features, out_features=self.n_classes)
         self.model.fc = fc
 
-    @staticmethod
-    def _save_model(checkpoint_path: str, model, correct_val, total_val):
-        torch.save(model, os.path.join(checkpoint_path, f'checkpoint_{correct_val / total_val * 100:.2f}'))
-
-    def train(self, test_dataloader, train_dataloader, num_epoch: int = 10, save: bool = True,
-              checkpoint_path: str = "checkpoint_path", ):
+    def train(self, test_dataloader, train_dataloader, num_epoch: int = 10):
         steps = 0
         train_losses, val_losses = [], []
         device = self.device
@@ -115,9 +108,7 @@ class TLModelBase(ABC):
 
                     train_losses.append(running_loss / total_train)
                     val_losses.append(val_loss / total_val)
-            if save:
-                self._save_model(checkpoint_path=checkpoint_path, model=self.model, correct_val=correct_val,
-                                 total_val=total_val)
+
         return self.model, train_losses, val_losses
 
     def evaluate_model(self, test_subset, model, classes) -> EvaluationMetrics:
@@ -135,9 +126,8 @@ class TLModelBase(ABC):
 
             y_test.append(label)
             y_pred.append(self.genre_dict[final_pred])
-            precision, recall, fscore, support = score(np.array(y_test), np.array(y_pred))
 
-            return EvaluationMetrics(precision=precision,
-                                     recall=recall,
-                                     fscore=fscore,
-                                     support=support)
+        precision, recall, fscore, support = score(np.array(y_test), np.array(y_pred), average='macro')
+        return EvaluationMetrics(precision=precision,
+                                 recall=recall,
+                                 fscore=fscore)
