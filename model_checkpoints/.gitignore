@@ -1,1 +1,5 @@
 /resnet18_checkpoint.pt
+/alexnet_checkpoint.pt
+/resnet34_checkpoint.pt
+/densenet121_checkpoint.pt
+/vgg_checkpoint.pt

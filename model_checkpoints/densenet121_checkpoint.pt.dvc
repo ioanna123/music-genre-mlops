@@ -1,0 +1,4 @@
+outs:
+- md5: 9835a810b0a0f78f60adaa82b37b5277
+  size: 32550351
+  path: densenet121_checkpoint.pt
