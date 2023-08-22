@@ -20,7 +20,6 @@ class TLModelBase(ABC):
                  criterion: Criterion,
                  optimizer: Optimizer,
                  in_features: int,
-                 model_name: str,
                  n_classes: int = 10,
                  device='cuda' if torch.cuda.is_available() else 'cpu'
                  ):
