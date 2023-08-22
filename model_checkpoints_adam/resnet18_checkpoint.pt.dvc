@@ -1,0 +1,4 @@
+outs:
+- md5: eb2e20082ec9e12245b488489986d44f
+  size: 44802829
+  path: resnet18_checkpoint.pt
