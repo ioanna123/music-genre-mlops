@@ -1,0 +1,4 @@
+outs:
+- md5: 29482f42c6732ff3896d715135a3d261
+  size: 553604799
+  path: vgg_checkpoint.pt

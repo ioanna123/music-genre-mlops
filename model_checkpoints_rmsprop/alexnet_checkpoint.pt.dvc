@@ -1,0 +1,4 @@
+outs:
+- md5: a190ab3ab5e2a9b011df675941c15ca0
+  size: 244572655
+  path: alexnet_checkpoint.pt
