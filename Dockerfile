@@ -28,10 +28,14 @@ COPY .dvc .dvc
 COPY .git .git
 COPY dvc_pull_files.sh dvc_pull_files.sh
 COPY checkpoints checkpoints
-RUN #--mount=type=secret,id=aws_config --mount=type=secret,id=aws_credentials sh dvc_pull_files.sh
+COPY Data/genres_original.dvc Data/genres_original.dvc
+COPY Data/images_original.dvc Data/images_original.dvc
+COPY genre_classification genre_classification
+COPY __main__.py __main__.py
+COPY settings.py settings.py
 # install predictor and copy files
 RUN pip install -r requirements.txt
-COPY . .
+RUN --mount=type=secret,id=aws_config --mount=type=secret,id=aws_credentials sh dvc_pull_files.sh
 
 # Define the default command to run when the container starts
 # docker run -it --rm music-genre-classif:latest python3 __main__.py train-using-image-features --model resnet18 --criterion cross_entropy --optimizer sdg --checkpoints_path checkpoints --images_path Image_data
