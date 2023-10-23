@@ -9,7 +9,9 @@ deps = [
     'torchvision==0.12.0',
     'torch==1.11.0',
     'dvc==2.58.2',
-    'smart-open==6.3.0'
+    'smart-open==6.3.0',
+    'mlflow==2.6.0'
+
 ]
 
 setup(name='music-genre-classification',
