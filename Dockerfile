@@ -37,6 +37,4 @@ COPY settings.py settings.py
 RUN pip install -r requirements.txt
 RUN --mount=type=secret,id=aws_config --mount=type=secret,id=aws_credentials sh dvc_pull_files.sh
 
-# Define the default command to run when the container starts
-# docker run -it --rm music-genre-classif:latest python3 __main__.py train-using-image-features --model resnet18 --criterion cross_entropy --optimizer sdg --checkpoints_path checkpoints --images_path Image_data
-# docker build -t music-genre-classif:latest .
+

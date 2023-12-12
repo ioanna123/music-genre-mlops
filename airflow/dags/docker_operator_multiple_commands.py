@@ -20,11 +20,11 @@ def docker_dag_multiple_commands():
         environment={
             'AWS_DEFAULT_REGION': 'us-east-1',
             'AWS_REGION': 'us-east-1',
-            'AWS_SECRET_ACCESS_KEY': 'SoWpDJzMmRsd+gn1vvv1prrmDxeg6qG3aCr6/iS+',
-            'AWS_ACCESS_KEY_ID': 'ASIAXPJZLAWLCKT75S6C',
-            'AWS_SESSION_TOKEN': 'IQoJb3JpZ2luX2VjEBwaCXVzLWVhc3QtMSJGMEQCIDPBzVlE8kKbBMiV9vG6ag678CIyhU7YlAHgVq8cmftgAiBkh8Z7U5bEJRxEb6O4JuhpsUC1QOAtImn8u7AQKgiwPyqpAgj1//////////8BEAIaDDUxMzkwNTcyMjc3NCIMroKIZCZIdAIzEalqKv0BUVfu40jguE//i7Tl64vJUTmJEt24jFhW99N/LjtEOpW72CJ/Mx1uvwLmL8qI1t+aQfNbtLDnXI9AGcaVosQH2jxmrNOzyWquuFmWCcqgaqYfpl61TNwaCfgz1pTWSZppEfS5SghquKM5vd8xNpQAsVuk8dhbRYOG0Y2CSyvkVAKU4G5dAciqgzSYRt7kqL8v8memXwDcfY9YTtMNkZjL6q/2GhswLt9yq+V0yZyPuZRCdS6cjoCEjzPoMxnVSiS99Ky7ePESoMxw6XFWOlsyOedCvpqPu7LMfu9fu23NXSlDG02DCixbyU+4LwjCR2LAOg44ZHw8i858PW9sWTCu0v2nBjqeATFAN3NO1HvwSCYFi1YX4VU2ivQplIe3o4mu0UA1WgWlx5XwIz6TGDkFoCmJd80sm5yIHOIn1L3xzQTZErAXJB+zJuD/7AZ2UEhKKtT7dglj2rrAz5FSGqvWOhYe1Ve5exLZgjDN9PtXiWWa/VgtCCf0TzKm2XX4G3S+hgqRxJQOoGdQ2QSHUpnSrQWrTg+QZkLA/Jnq+cvmmpV+ibmu'
+            'AWS_SECRET_ACCESS_KEY': 'add_the_AWS_SECRET_ACCESS_KEY',
+            'AWS_ACCESS_KEY_ID': 'add_the_AWS_ACCESS_KEY_ID',
+            'AWS_SESSION_TOKEN': 'add_the_AWS_SESSION_TOKEN'
+
         }
-        # docker_conn_id='aws_default'
     )
 
     t1() >> t2
