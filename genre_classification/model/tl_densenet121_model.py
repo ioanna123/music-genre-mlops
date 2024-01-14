@@ -8,7 +8,7 @@ from genre_classification.trainer.optimizer import Optimizer
 class Densenet121Model(TLModelBase):
 
     def __init__(self, model, criterion, optimizer, features):
-        super().__init__(model_name='densenet121', model=model, criterion=criterion, optimizer=optimizer,
+        super().__init__(model=model, criterion=criterion, optimizer=optimizer,
                          in_features=features)
 
 
