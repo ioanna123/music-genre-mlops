@@ -10,7 +10,8 @@ deps = [
     'torch==1.11.0',
     'dvc==2.58.2',
     'smart-open==6.3.0',
-    'mlflow==2.6.0'
+    'mlflow==2.6.0',
+    'optuna==3.3.0'
 
 ]
 
@@ -24,14 +25,9 @@ setup(name='music-genre-classification',
       ],
       setup_requires=[
       ],
-      test_suite='nose.collector',
-      packages=find_packages(exclude=['tests']),
       entry_points={
           'console_scripts': [
-              'worker = ds_metadata_linking.workflow.__main__:cli',
-              'predictors = ds_metadata_linking.predictors.__main__:predictors',
-              'infra = infra.__main__:cli',
-              'pair_predictors = ds_metadata_linking.predictors.__main__:pair_predictors'
+              'pipeline = __main__.py:cli'
           ]
       }
       )
