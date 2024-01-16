@@ -114,3 +114,6 @@ dataset = image_dataset.load_data(path_to_images, transform)
 train_dataloader, val_dataloader, test_subset, classes = image_dataset.transform(path_to_images)
 
 ~~~
+
+### Audio Preprocess Pipeline
+![Audio_preprocess](images/audio_preprocess_pipeline.png)
