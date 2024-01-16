@@ -89,3 +89,17 @@ categorization tasks. The following pre-trained models are utilized:
 
 These pre-trained models can extract hierarchical features from Mel spectrograms, providing a strong foundation for
 audio genre classification and aiding in understanding complex audio patterns.
+
+### Hyperparameter Optimization
+
+Optimizing hyperparameters in the realm of Machine Learning (ML) is a crucial endeavor, influencing model performance
+and learning trajectories. Evolving from traditional approaches to more sophisticated techniques, Optuna has emerged as
+a leading hyperparameter optimization framework, offering a paradigmatic shift with cutting-edge algorithms. Addressing
+the scalability challenges of methods like grid search and random search, Optuna incorporates diverse sampling and
+pruning strategies, such as Tree-Structured Parzen Estimator (TPE) and Non-dominated sorting genetic algorithm II (
+NSGA-II). The framework's operationalization involves defining an objective function encapsulating the model's logic,
+training, and evaluation, with the Study object orchestrating iterative optimization. Visualization tools within Optuna
+provide insights into optimization history and parameter importances. In a thesis context, Optuna proves invaluable,
+offering versatility in defining dynamic hyperparameter search spaces, seamless integration with various optimization
+parameters, and adaptability to diverse research requirements, making it an ideal companion for hyperparameter tuning
+and model optimization endeavors.

@@ -55,5 +55,5 @@ into smaller chunks, enabling sequential processing and efficient memory utiliza
 fixed-size input requirements of deep learning models and optimizes computational resources by segmenting the audio into
 manageable portions.
 
-### Feature Extraction Transformation
+### Feature Extraction Pipeline
 ![feature_extraction](images/feature_extraction_results.png)

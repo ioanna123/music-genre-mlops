@@ -92,3 +92,16 @@ The Factory Pattern is useful in the machine learning pipeline for the following
         )
     
     ```
+## Dependency Injection (DI)
+
+Dependency Injection (DI) is a design pattern widely employed in software development to enhance modularity and
+maintainability of code. At its core, DI involves the inversion of control, where components receive their dependencies
+from an external source rather than creating them internally. This external source, often called the injector or
+container, manages the
+instantiation and injection of dependencies into the dependent components. The primary goal of Dependency Injection is
+to decouple classes
+and promote a more flexible and testable codebase. By allowing dependencies to be injected dynamically, DI facilitates
+the replacement of components without modifying the existing code, promoting the principles of open-closed and single
+responsibility. This pattern is prevalent in various frameworks and containers across different programming languages,
+contributing to the development of scalable and easily maintainable software systems. In essence, Dependency Injection
+provides a powerful mechanism for achieving loose coupling and promoting the principles of object-oriented design.

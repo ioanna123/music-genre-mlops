@@ -61,4 +61,4 @@ features, training the model and evaluate.
 
 ### Deep Learning Pipeline
 
-![dL_pipeline](images/dl Pipeline.png)
+![dL_pipeline](images/ml_pipeline.png)
