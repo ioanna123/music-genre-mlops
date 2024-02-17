@@ -1,5 +1,6 @@
 from os import listdir
 from os.path import isfile, join
+from typing import Union, Optional
 
 from genre_classification.data_model.criterion import Criterion
 from genre_classification.data_model.tl_models import TLModel
@@ -15,8 +16,9 @@ from genre_classification.utils.save_mel_spec_img import save_mel_spec_per_genre
 from settings import window_duration
 
 
-def train_tl_model_images(tl_model: TLModel, criterion: Criterion, optimizer: Optimizer,
-                          checkpoints_path: str, images_path: str, save: bool = True, num_epoch: int = 10):
+def train_tl_model_images(tl_model: TLModel, criterion: Criterion,
+                          checkpoints_path: str, images_path: str, optimizer: Optional[Optimizer] = None,
+                          save: bool = True, num_epoch: int = 10):
     """
     Starts a new end-to-end training given a model, a criterion, optimizer, image_data and save results to checkpoint path
     @param tl_model: The dl model for the training
@@ -67,8 +69,9 @@ def create_image_features_from_audio(path_with_audios_dir: str, path_to_image: s
                     )
 
 
-def train_tl_model_audio(tl_model: TLModel, criterion: Criterion, optimizer: Optimizer,
-                         checkpoints_path: str, save_images_path: str, audio_paths: str, save: bool = True,
+def train_tl_model_audio(tl_model: TLModel, criterion: Criterion,
+                         checkpoints_path: str, save_images_path: str, audio_paths: str,
+                         optimizer: Optional[Optimizer] = None, save: bool = True,
                          num_epoch: int = 10):
     """
     Starts a new end-to-end training given a model, a criterion, optimizer, image_data and save results to checkpoint path

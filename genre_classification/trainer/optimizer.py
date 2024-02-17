@@ -1,4 +1,5 @@
 from enum import Enum
+from typing import Tuple, Union
 
 import torch.optim as optim
 
@@ -27,3 +28,13 @@ class OptimizerBase:
 
         elif optimizer == Optimizer.rmsprop.value:
             return optim.RMSprop(self.params, lr=self.lr)
+
+
+def suggest_optimizer(trial) -> Tuple[Union[str, float], str]:
+    # Learning rate on a logarithmic scale
+    lr = trial.suggest_float("lr", 1e-4, 1e-1, log=True)
+
+    # Optimizer to use as categorical value
+    optimizer_name = trial.suggest_categorical("optimizer_name", ["Adam", "Adadelta", "sdg", "rmsprop"])
+
+    return lr, optimizer_name

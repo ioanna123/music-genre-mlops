@@ -1,13 +1,4 @@
 stages:
-  #  train_using_audio:
-  #    cmd: python3 __main__.py train-using-original-audios --model resnet18 --criterion cross_entropy --optimizer sdg --checkpoints_path checkpoints --save_images_path Data/images_original --audio_path Data/genre_originals
-  #    deps:
-  #      - __main__.py
-  #      - Data/genre_originals
-  #
-  #    outs:
-  #      - checkpoints
-  #      - Data/images_original
   feature_extraction:
     cmd: python3 __main__.py create-image-features-from-audio --path_with_audios_dir Data/genres_original --path_to_image Image_data
     deps:

@@ -10,7 +10,7 @@ from tqdm import tqdm
 
 from genre_classification.data_model.criterion import Criterion
 from genre_classification.data_model.evaluation import EvaluationMetrics
-from genre_classification.trainer.optimizer import Optimizer, OptimizerBase
+from genre_classification.trainer.optimizer import Optimizer, OptimizerBase, suggest_optimizer
 from settings import LR
 
 
@@ -52,69 +52,68 @@ class TLModelBase(ABC):
             for param in self.model.parameters():
                 param.requires_grad = True
 
+        if self.optimizer_option:
             optimizer = OptimizerBase(self.model.parameters(), LR).optimizer(self.optimizer_option)
-            for epoch in tqdm(range(num_epoch)):
-                running_loss = 0
-                correct_train = 0
-                total_train = 0
-                iter_time = time()
+        else:
+            lr, optimizer_name = suggest_optimizer()
+            optimizer = OptimizerBase(self.model.parameters(), lr).optimizer(optimizer_name)
 
-                self.model.train()
+        for epoch in tqdm(range(num_epoch)):
+            running_loss = 0
+            correct_train = 0
+            total_train = 0
+            iter_time = time()
 
-                for i, (images, labels) in enumerate(train_dataloader):
-                    steps += 1
-                    images = images.to(device)
-                    labels = labels.to(device)
+            self.model.train()
 
-                    # Forward pass
-                    output = self.model(images)
-                    loss = self.criterion(output, labels)
+            for i, (images, labels) in enumerate(train_dataloader):
+                steps += 1
+                images = images.to(device)
+                labels = labels.to(device)
 
-                    correct_train += (torch.max(output, dim=1)[1] == labels).sum()
-                    total_train += labels.size(0)
+                # Forward pass
+                output = self.model(images)
+                loss = self.criterion(output, labels)
 
-                    # Backward and optimize
-                    optimizer.zero_grad()
-                    loss.backward()
-                    optimizer.step()
+                correct_train += (torch.max(output, dim=1)[1] == labels).sum()
+                total_train += labels.size(0)
 
-                    running_loss += loss.item()
+                # Backward and optimize
+                optimizer.zero_grad()
+                loss.backward()
+                optimizer.step()
 
-                    # Logging
-                    if steps % 1 == 0:
-                        # if True:
-                        print(f'Epoch [{epoch + 1}]/[{num_epoch}]. Batch [{i + 1}]/[{len(train_dataloader)}].',
-                              end=' ')
-                        print(f'Train loss {running_loss / steps:.3f}.', end=' ')
-                        print(f'Train acc {correct_train / total_train * 100:.3f}.', end=' ')
-                        with torch.no_grad():
-                            self.model.eval()
-                            correct_val, total_val = 0, 0
-                            val_loss = 0
-                            for images, labels in test_dataloader:
-                                images = images.to(device)
-                                labels = labels.to(device)
-                                output = self.model(images)
-                                loss = self.criterion(output, labels)
-                                val_loss += loss.item()
+                running_loss += loss.item()
 
-                                correct_val += (torch.max(output, dim=1)[1] == labels).sum()
-                                total_val += labels.size(0)
+                # Logging
+                if steps % 1 == 0:
+                    # if True:
+                    print(f'Epoch [{epoch + 1}]/[{num_epoch}]. Batch [{i + 1}]/[{len(train_dataloader)}].',
+                          end=' ')
+                    print(f'Train loss {running_loss / steps:.3f}.', end=' ')
+                    print(f'Train acc {correct_train / total_train * 100:.3f}.', end=' ')
+                    with torch.no_grad():
+                        self.model.eval()
+                        correct_val, total_val = 0, 0
+                        val_loss = 0
+                        for images, labels in test_dataloader:
+                            images = images.to(device)
+                            labels = labels.to(device)
+                            output = self.model(images)
+                            loss = self.criterion(output, labels)
+                            val_loss += loss.item()
 
-                        print(
-                            f'Val loss {val_loss / len(test_dataloader):.3f}. Val acc {correct_val / total_val * 100:.3f}.',
-                            end=' ')
-                        print(f'Took {time() - iter_time:.3f} seconds')
-                        iter_time = time()
+                            correct_val += (torch.max(output, dim=1)[1] == labels).sum()
+                            total_val += labels.size(0)
 
-                        train_loss = running_loss / total_train
-                        val_loss = val_loss / total_val
+                    print(
+                        f'Val loss {val_loss / len(test_dataloader):.3f}. Val acc {correct_val / total_val * 100:.3f}.',
+                        end=' ')
+                    print(f'Took {time() - iter_time:.3f} seconds')
+                    iter_time = time()
 
-                        mlflow.log_metric('train_losses', train_loss, step=epoch)
-                        mlflow.log_metric('val_loss', val_loss, step=epoch)
-
-                        train_losses.append(train_loss)
-                        val_losses.append(val_loss)
+                    train_losses.append(running_loss / total_train)
+                    val_losses.append(val_loss / total_val)
 
         return self.model, train_losses, val_losses
 
