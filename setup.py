@@ -12,7 +12,9 @@ deps = {
         'dvc==2.58.2',
         'smart-open==6.3.0',
         'mlflow==1.20.0',  # Updated version
-        'optuna==3.3.0'
+        'optuna==3.3.0',
+        'onnx==1.15.0',
+        'onnxruntime==1.17.0'
     ]
 }
 
