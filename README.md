@@ -27,6 +27,7 @@ workflows.
 |   |-- dags/
 |   |-- logs/
 |-- checkpoints/
+|-- evidently_ai/
 |-- Data/
 |   |-- .dvc
 |-- Dockerfile
@@ -65,17 +66,19 @@ workflows.
 
 2. checkpoints/: Directory to store trained models.
 
-3. Data/: Directory with a DVC file to synchronize data.
+3.  checkpoints/: Directory containing the code and reports from evidently. [Internal Evidently AI Documentation](docs/evidently_ai.md)
 
-4. Dockerfile: Script to build the project using Docker. [Internal Docker Documentation](docs/project_packaging.md)
+4. Data/: Directory with a DVC file to synchronize data.
 
-5. docs/: Extended documentation for the project.
+5. Dockerfile: Script to build the project using Docker. [Internal Docker Documentation](docs/project_packaging.md)
 
-6. dvc_pull_files.sh: Script to download DVC files (models and data). [Internal DVC Documentation](docs/dvc.md)
+6. docs/: Extended documentation for the project.
 
-7. dvc.yaml: DVC pipelines codebase. [Internal DVC Documentation](docs/dvc.md)
+7. dvc_pull_files.sh: Script to download DVC files (models and data). [Internal DVC Documentation](docs/dvc.md)
 
-8. genre_classification/: Main package containing the core functionality of the project.
+8. dvc.yaml: DVC pipelines codebase. [Internal DVC Documentation](docs/dvc.md)
+
+9. genre_classification/: Main package containing the core functionality of the project.
 
    data_model/: Directory with data models used in the project. [DataModel Overview](docs/data_model.md)
 
@@ -94,13 +97,13 @@ workflows.
    utils/: Directory with scripts supporting the project (e.g., evaluation metrics, metadata handling, model selection,
    and save/load utilities).
 
-9. __main__.py: Command-line interface to execute ML pipelines developed in the
+10. __main__.py: Command-line interface to execute ML pipelines developed in the
    project. [CLI Implementation Overview](docs/cli.md)
 
-10. mlruns/: MLflow directory holding metadata. [Internal MLFlow Documentation](docs/ml_flow.md)
+11. mlruns/: MLflow directory holding metadata. [Internal MLFlow Documentation](docs/ml_flow.md)
 
-11. playground.py: Script to test codebase functions.
+12. playground.py: Script to test codebase functions.
 
-12. settings.py: File containing project settings and global variables.
+13. settings.py: File containing project settings and global variables.
 
 [Software Engineering patterns and principles](docs/soft_eng_tech.md)
