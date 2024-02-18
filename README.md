@@ -66,7 +66,7 @@ workflows.
 
 2. checkpoints/: Directory to store trained models.
 
-3.  checkpoints/: Directory containing the code and reports from evidently. [Internal Evidently AI Documentation](docs/evidently_ai.md)
+3. evidently_ai/: Directory containing the code and reports from evidently. [Internal Evidently AI Documentation](docs/evidently_ai.md)
 
 4. Data/: Directory with a DVC file to synchronize data.
 

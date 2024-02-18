@@ -6,15 +6,16 @@ deps = {
         'librosa==0.9.2',
         'numpy==1.24.3',
         'ffmpeg-python>=0.2.0',
-        'matplotlib==3.4.3',  # Corrected version number
+        'matplotlib==3.4.3',
         'torchvision==0.12.0',
         'torch==1.11.0',
         'dvc==2.58.2',
         'smart-open==6.3.0',
-        'mlflow==1.20.0',  # Updated version
+        'mlflow==1.20.0',
         'optuna==3.3.0',
         'onnx==1.15.0',
-        'onnxruntime==1.17.0'
+        'onnxruntime==1.17.0',
+        'evidently==0.4.15'
     ]
 }
 
@@ -29,5 +30,5 @@ setup(
             'pipeline = __main__.py:cli'
         ]
     },
-    packages=['genre_classification']  # Add your package name here
+    packages=['genre_classification']
 )
